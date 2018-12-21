@@ -1,0 +1,47 @@
+<?php
+$flashMessage = $this->flashMessenger()->getMessages();
+$title = "找回密码";
+$this->headtitle($title);
+?>
+
+<h2><?php echo $this->escapehtml("邮箱验证".$title)?></h2>
+<?php 
+	 $form = $this->form;
+    $form->prepare();
+    echo $this->form()->openTag($form);
+?>
+	<div class="form-group">
+       <?= $this->formlabel($form->get('email'));?>
+       <div class="col-sm-4">
+				<?= $this->formElement($form->get('email'));?>
+				<?= $this->formElementErrors($form->get('email'));?>
+       </div>
+   </div>
+	<div class="form-group">
+        <?= $this->formlabel($form->get('captcha'));?>
+        <div class="col-sm-3">
+				<?= $this->formRow($form->get('loginCsrf'));?>
+             <?= $this->formcaptcha($form->get('captcha'));?>
+             <?= $this->formElementErrors($form->get('captcha'));?>
+        </div>
+   </div>
+   <div class="form-group">
+       <div class="col-sm-1">
+				<?= $this->formSubmit($form->get('submit'));?>
+       </div>
+   </div>
+<?= $this->form()->closeTag($form);?>
+	<?php if (count($flashMessage)) : ?>
+	<div class="alert alert-info">
+	<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+	<ul>
+        <?php
+    foreach ($flashMessage as $msg) :
+        foreach ($msg as $type => $message) :
+           ?>
+           <li><span class="<?php echo $type; ?>"><?php echo $message; ?></span></li>
+        <?php endforeach; ?>
+    <?php endforeach; ?>
+    </ul>
+    </div>
+    <?php endif; ?>

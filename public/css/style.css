@@ -1,0 +1,215 @@
+@charset "UTF-8";
+
+body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+}
+
+.zf-green {
+    color: #68b604;
+}
+
+.btn-success {
+  background-color: #57a900;
+  background-image: -moz-linear-gradient(top, #70d900, #57a900);
+  background-image: -ms-linear-gradient(top, #70d900, #57a900);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#70d900), to(#57a900));
+  background-image: -webkit-linear-gradient(top, #70d900, #57a900);
+  background-image: -o-linear-gradient(top, #70d900, #57a900);
+  background-image: linear-gradient(top, #70d900, #57a900);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#70d900', endColorstr='#57a900', GradientType=0);
+}
+
+.btn-success:hover,
+.btn-success:active,
+.btn-success.active,
+.btn-success.disabled,
+.btn-success[disabled] {
+  background-color: #57a900;
+}
+
+.btn-success:active, .btn-success.active {
+  background-color: #57a900;
+}
+
+div.container a.brand {
+    background: url("../img/zf2-logo.png") no-repeat scroll 0 10px transparent;
+    margin-left: 0;
+    padding: 8px 20px 12px 40px;
+}
+
+.navbar-brand > img {
+	float: left;
+	margin-top: 0px;
+}
+
+.panel-body table tr {
+	margin: 5px 0px;
+	display: block;
+}
+.panel-body table tr .label_flag{
+	width: 70px;
+}
+.navbar-inverse .navbar-nav > li > a{
+	color: #BABABA;
+	font-size: 16px;
+}
+.navbar-brand {
+	padding: 6px 15px;
+}
+.navbar {
+   margin-bottom: 0;
+	background-color: #2d2d30;
+	opacity: 0.9;
+	border: 0;
+   letter-spacing: 3px;
+}
+/*carousel高度响应式处理*/
+@media (min-width: 1200px) {
+    .carousel-inner > .item > img, .carousel-inner > .item > a > img {
+	   height: 610px;
+    }
+}
+@media (min-width: 960px) and (max-width: 1199px) {
+    .carousel-inner > .item > img, .carousel-inner > .item > a > img {
+	   height: 600px;
+    }
+}
+@media (min-width: 768px) and (max-width: 959px) {
+    .carousel-inner > .item > img, .carousel-inner > .item > a > img {
+	   height: 500px;
+    }
+}
+@media (min-width: 601px) and (max-width: 767px) {
+    .carousel-inner > .item > img, .carousel-inner > .item > a > img {
+	   height: 400px;
+    }
+}
+@media (min-width: 481px) and (max-width: 600px) {
+    .carousel-inner > .item > img, .carousel-inner > .item > a > img {
+	   height: 300px;
+    }
+}
+@media (min-width: 380px) and (max-width: 480px) {
+    .carousel-inner > .item > img, .carousel-inner > .item > a > img {
+	   height: 260px;
+    }
+}
+@media (max-width: 379px) {
+    .carousel-inner > .item > img, .carousel-inner > .item > a > img {
+	   height: 200px;
+    }
+}
+.text-muted {
+	color: #777;
+}
+
+/*分类页和浏览页样式*/
+.sideleft {
+    background-color: #f1f1f1;
+    padding: 0px 20px;
+	 padding-bottom: 50px;
+}
+.pagination{
+    margin-bottom:0px;
+}
+textarea {
+    resize:none;
+}
+.img{
+    margin-top: 20px;
+}
+.img .img-circle {
+    display:block;
+    margin:0px auto;
+}
+.blogname{
+    margin-bottom: 15px;
+}
+.blogname h4{
+    font-size: 24px;
+}
+.continc{
+    margin-top: 18px;	 
+}
+
+.crumbs {
+	margin-bottom: 30px;
+	font-size: 12px;
+}
+.crumbs ol{
+	list-style-type: none;
+	padding-left: 0px;
+}
+.crumbs li {
+	margin-right: 10px;
+	display: inline-block;
+}
+.crumbs a {
+	text-decoration: none;
+	display: block;
+}
+.crumbs a::after {
+	margin-left: 4px !important;
+	content: '>';
+	display: inline-block;
+	font-family: FontAwesome;
+	text-decoration: none;
+	color: #c1c2c4;
+	font-size: 70%;
+}
+.crumbs a:hover {
+	text-decoration:underline
+}
+.crumbs .noarrow::after {
+	content: '';
+}
+.crumbs span{
+	color: #4d4e53;
+}
+
+@media (max-width: 768px) {
+    .sideleft {
+        display:none;
+    }
+    .crumbs .cut{
+		 display:none !important;
+    }
+}
+.copyimg{
+    float: left;
+    padding-top: 7px;
+    padding-right: 10px;
+}
+.col-left{
+    margin-right: 12px;
+    float: left;
+}
+.col-right{
+    float: left;
+    padding-top: 0px;
+}
+.col-right h2{
+    margin-top: 6px;
+}
+.col-right::before{
+    content: '';
+    display: table;
+    clear: both;
+}
+.comment-form::before{
+    content: "";
+    display:table;
+    clear:both;
+}
+@media (max-width: 400px) {
+    .col-left{
+        display: none;
+    }
+}
+.list-blg{
+	margin-bottom: 12px;
+}
+.panel-default .panel-heading{
+    color: #777777;
+}

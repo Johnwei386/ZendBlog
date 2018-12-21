@@ -1,0 +1,80 @@
+<?php
+
+$title = '博客管理';
+$this->headtitle($title);
+?>
+<style>
+.butrow{
+	margin-bottom: 5px;
+}
+.copyright{
+	margin-top: 34px;
+}
+</style>
+<h1 class="text-muted"><?php echo $this->escapehtml($title); ?></h1>
+<div class="row butrow">
+  <div class="col-sm-12">
+  	<a class="btn btn-info" href="<?php echo $this->url('blog', array('action'=>'add'));?>">添加博客</a>
+  </div>  	
+</div>
+<div class="row">
+  <div class="col-sm-12">
+   <div class="table-responsive">
+ 	<table class="table">
+ 		<thead>
+ 		<tr>
+  			<th>ID</th>
+  			<th>标题</th>
+  			<th>类别</th>
+  			<th>图片</th>
+  			<th>时间</th>
+  			<th>Slide</th>
+  			<th>操作</th>
+ 		</tr>
+ 		</thead>
+ 		<tbody>
+		<?php foreach ($this->posts as $post) : ?>
+		 <tr>
+  			<td><?php echo $this->escapeHtml($post->id);?></td>
+  			<td><?php echo $this->escapeHtml($post->title);?></td>
+  			<td><?php echo $this->escapeHtml($post->classify);?></td>
+  			<td><?php echo $this->escapeHtml($post->image);?></td>
+  			<td><?php echo $this->escapeHtml($post->ctime);?></td>
+  			<td><?php echo $this->escapeHtml($post->slide);?></td>
+  			<td>
+  				<a href="<?php echo $this->url('blog',array('action'=>'edit', 'id' => $post->id));?>"
+  				data-toggle="tooltip" title="编辑">
+  					<span class="glyphicon glyphicon-edit"></span>
+  				</a>
+  				<a href="<?php echo $this->url('blog',array('action'=>'delete', 'id' => $post->id));?>"
+  				data-toggle="tooltip" title="删除">
+  					<span class="glyphicon glyphicon-trash"></span>
+  				</a>
+  			</td>
+ 		</tr>
+	<?php endforeach; ?>
+	</tbody>
+	</table>
+   </div>
+  </div>
+</div>
+<script>
+   $(document).ready(function(){
+       $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+<?php
+ // add at the end of the file after the table
+ echo $this->paginationControl(
+     // the paginator object
+     $this->posts,
+     // the scrolling style
+     'sliding',
+     // the partial to use to render the control
+     'partial/paginator.phtml',
+     // the route to link to when a user clicks a control link
+     array(
+         'route' => 'blog'
+     )
+ );
+ ?>

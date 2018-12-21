@@ -1,0 +1,254 @@
+<?php
+
+$title = '格言管理';
+$this->headtitle($title);
+$this->headscript()->prependFile($this->basePath('js/jquery.form.js'));
+?>
+<style>
+.butrow{
+	margin-bottom: 5px;
+}
+.modal-header, h4, .close {
+   background-color: #333;
+   color: #fff !important;
+   text-align: center;
+   font-size: 30px;
+}
+.modal-header, .modal-body {
+   padding: 20px 50px;
+}
+textarea{
+	resize: none;
+}
+.btn {
+   padding: 10px 20px;
+   background-color: #333;
+   color: #f1f1f1;
+   border-radius: 0;
+   transition: .2s;
+}
+.btn:hover, .btn:focus {
+   border: 1px solid #333;
+   background-color: #fff;
+   color: #000;
+}
+.form-control {
+	border-radius: 0;
+}
+.copyright{
+	margin-top: 34px;
+}
+</style>
+<h1 class="text-muted"><?php echo $this->escapehtml($title); ?></h1>
+<div class="row butrow">
+  <div class="col-sm-12">
+	 <button id="but" type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">添加格言</button>
+	  <!-- Modal -->
+	  <div id="myModal" class="modal fade" role="dialog">
+	  	   <div class="modal-dialog">
+	  	   		<!-- Modal content-->
+	  	   		<div class="modal-content">
+	  	   		    <div class="modal-header text-center">
+	  	   		    	 <button type="button" class="close" data-dismiss="modal">&times;</button>
+	  	   		    	 <h4 class="modal-title">添加格言</h4>
+	  	   		    </div>
+	  	   		    <div class="modal-body">
+	  	   		    	<form method="post" id="motto" action="<?= $this->escapehtml('/motto/add')?>" role="form">
+	  	   		    		<div class="form-group">
+	  	   		    			<input type="hidden" name="id" value=''/>
+	  	   		    			<label for="author">作者:</label>
+	  	   		    			<input type="text" name="author" class="form-control" value=""/>
+	  	   		    		</div>
+	  	   		    		<div class="form-group">
+	  	   		    			<label for="motto">格言:</label>
+	  	   		    			<textarea name="motto" class="form-control"></textarea>
+	  	   		    		</div>
+	  	   		    		<div class="form-group" id="captcha" data-content-url="<?= $this->url('motto',array('action'=>'captcha'))?>">
+	  	   		    			<?= $this->partial('motto/index/captcha.phtml'); ?>
+	  	   		    		</div>
+	  	   		    		<button type="submit" class="btn btn-block">提交
+                         <span class="glyphicon glyphicon-ok"></span>
+                      </button>
+	  	   		    	</form>	  	   		    	
+	  	   		    </div>
+	  	   		    <div class="modal-footer">
+	  	   		    	<button type="button" class="btn btn-default" data-dismiss="modal">
+                        <span class="glyphicon glyphicon-remove"></span> Cancel
+                    </button>
+	  	   		    </div>	  	   		    
+	  	   		 </div>
+	  	    </div>
+	  	</div>
+  </div>  	
+</div>
+<div class="row">
+  <div class="col-sm-12">
+   <div class="table-responsive">
+ 	<table class="table">
+ 	<thead>
+ 	<tr>
+  		<th>ID</th>
+  		<th>作者</th>
+  		<th>格言</th>
+  		<th>时间</th>
+  		<th>操作</th>
+ 	</tr>
+ 	</thead>
+ 	<tbody>
+	<?php foreach ($this->posts as $post) : ?>
+ 	<tr>
+  		<td><?php echo $this->escapeHtml($post->id);?></td>
+  		<td><?php echo $this->escapeHtml($post->author);?></td>
+  		<td><?php echo $this->escapeHtml($post->motto);?></td>
+  		<td><?php echo $this->escapeHtml($post->mtime);?></td>
+  		<td>
+  			<a href="<?php echo $this->url('motto',array('action'=>'edit', 'id' => $post->id));?>"
+  			data-toggle="tooltip" title="编辑">
+            <span class="glyphicon glyphicon-edit"></span>
+         </a>
+  			<a href="#" onclick="findID('<?= $post->id?>')" data-toggle="modal" data-target="#delModal"
+  			data-toggle="tooltip" title="删除">
+  				<span class="glyphicon glyphicon-trash"></span>
+  			</a>
+  		</td>
+	 </tr>
+	<?php endforeach; ?>
+	</tbody>
+	</table>
+   </div>
+  	 <!-- Modal -->
+	  <div id="delModal" class="modal fade" role="dialog">
+	  	   <div class="modal-dialog">
+	  	   		<!-- Modal content-->
+	  	   		<div class="modal-content">
+	  	   		    <div class="modal-header text-center">
+	  	   		    	 <button type="button" class="close" data-dismiss="modal">&times;</button>
+	  	   		    	 <h4 class="modal-title">删除格言</h4>
+	  	   		    </div>
+	  	   		    <div class="modal-body text-center">
+	  	   		    	<div id="delmes">
+	  	   		    		<h5 style="font-size:24px; margin-bottom:10px;">你确定要删除这条格言？</h5>
+	  	   		    		<button id="yes" style="margin-right:14px;" type="button" class="btn btn-default">
+	  	   		    			Yes
+	  	   		    		</button>	
+	  	   		    		<button id="No" type="button" class="btn btn-default" data-dismiss="modal">
+	  	   		    			No
+	  	   		    		</button>	  	   		    	
+	  	   		    	</div> 	   		    	
+	  	   		    </div>
+	  	   		    <div class="modal-footer">
+	  	   		    	 <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <span class="glyphicon glyphicon-remove"></span> Cancel
+                    </button>
+	  	   		    </div>	  	   		    
+	  	   		 </div>
+	  	    </div>
+	  	</div>
+  </div>
+</div>
+<script>
+var globid='';
+function findID(id)
+{
+	globid=id;
+	$('.container .alert').remove();
+	//console.log(globid);
+}
+
+function refreshCaptcha(select)
+{
+	var $captcha = $('#'+select);
+	var url = $captcha.data('contentUrl');
+	$captcha.load(url);
+}
+
+$(document).ready(function(){
+   $('[data-toggle="tooltip"]').tooltip();//bootstrap浮动提示
+   //初始化验证码
+   refreshCaptcha('captcha');
+   //获取焦点后清除alert
+   $('.form-group input,textarea').focus(function(){
+	   $('.container .alert').remove();
+   });
+   $('#but').click(function(){
+	   $('.container .alert').remove();
+   });
+   
+   $('#motto').on('submit',function(e){
+	   e.preventDefault();
+	   $('.container .alert').remove();//移除提示div
+	   $(this).ajaxSubmit({
+		   beforeSubmit: function(arr,$form,options){
+			   //arr.push({name: "isAjax", value: "1"});
+			},
+			success: function(response, statusText, xhr, $form){
+				if(response.status){
+					//Do something
+					$('#motto').after(
+		                    '<div class="alert alert-success alert-dismissable" style="margin-top: 10px">' +
+	                        '<button type="button" class="close" data-dismiss="alert">'+ 
+	                        '<span style="color:#333;top:-6px;">&times;</span></button>' +
+	                        '<div>' + "<span class='glyphicon glyphicon-ok'></span>" + response.message + '</div>' +
+	                        '</div>'
+	                );
+					//refreshCaptcha('captcha');
+					location.reload();										
+				} else{
+					//Do something
+					var errors='';
+					var obj=response.message;
+					//for in 遍历二维数组
+					for(var key in obj){
+						var mesg = obj[key]
+						for(var k in mesg){
+							errors = errors + '<p>'+"<span class='glyphicon glyphicon-warning-sign'></span>" +mesg[k] + '</p>';
+						}
+					}
+					$('#motto').after(
+		                    '<div class="alert alert-danger alert-dismissable" style="margin-top: 10px">' +
+	                        '<button type="button" class="close" data-dismiss="alert"><span style="color:#333;">&times;</span></button>' +
+	                        '<div>' + errors + '</div>' +'</div>'
+	                );
+					refreshCaptcha('captcha');				
+				}
+			},
+			error: function(a,b,c){
+				console.log(a,b,c);
+			},
+			resetForm:true
+		});
+	});
+
+	/*删除操作*/
+	$('#yes').click(function(){
+		var del = 'Yes';		
+		$.post("/motto/delete?id="+Math.floor(Math.random()*1000), 
+			    { "id":globid,"confirm":del},
+				 function(data){
+				    if(data.status){
+					    $('#delmes').after("<div class='alert alert-success' style='margin-top:10px'>"+
+							    		 data.message + "</div");
+					    location.reload();
+					}else{
+						$('#delmes').after("<div class='alert alert-warning' style='margin-top:10px'>"+
+					    		 data.message + "</div");
+					}
+		}, "json");
+	});	
+});
+</script>
+<?php
+ // add at the end of the file after the table
+ echo $this->paginationControl(
+     // the paginator object
+     $this->posts,
+     // the scrolling style
+     'sliding',
+     // the partial to use to render the control
+     'partial/paginator.phtml',
+     // the route to link to when a user clicks a control link
+     array(
+         'route' => 'motto'
+     )
+ );
+ ?>

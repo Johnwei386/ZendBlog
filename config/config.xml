@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE config [
+<!--配置文件的文档定义，根元素为config，子元素为各个配置项--><!ELEMENT config (category , headimg)>
+<!ELEMENT category (programme , hacker , algorithm , thoughts , travel)>
+<!ELEMENT programme (#PCDATA)>
+<!ELEMENT hacker (#PCDATA)>
+<!ELEMENT algorithm (#PCDATA)>
+<!ELEMENT thoughts (#PCDATA)>
+<!ELEMENT travel (#PCDATA)>
+<!ELEMENT headimg (#PCDATA)>
+]>
+<config>
+  <category>
+    <programme>编程</programme>
+    <hacker>黑客</hacker>
+    <algorithm>算法</algorithm>
+    <thoughts>思想</thoughts>
+    <travel>旅行</travel>
+  </category>
+  <headimg>haixia.png</headimg>
+</config>

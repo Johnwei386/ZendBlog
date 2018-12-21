@@ -1,0 +1,48 @@
+<?php
+$title = "编辑格言";
+$this->headtitle($title);
+?>
+<style>
+textarea{
+   resize:none;
+}
+</style>
+<div class="row">
+	<div class="col-sm-12">
+		<h1><?= $title?></h1>
+		<?php 
+		  $form=$this->form;
+		  $form->setAttribute('action',$this->url('motto',array('action'=>'edit','id'=>$this->id)));
+		  $form->prepare();
+		  echo $this->form()->openTag($form);
+		?>
+		<div class="form-group">
+			<?= $this->formhidden($form->get('id'))?>
+			<?= $this->formlabel($form->get('author'))?>
+			<div class="col-sm-10">
+			<?= $this->formelement($form->get('author'))?>
+			<?= $this->formelementerrors($form->get('author'))?>
+			</div>
+		</div>
+		<div class="form-group">
+			<?= $this->formlabel($form->get('motto'))?>
+			<div class="col-sm-10">
+			<?= $this->formelement($form->get('motto'))?>
+			<?= $this->formelementerrors($form->get('motto'))?>
+			</div>			
+		</div>
+		<div class="form-group">
+			<div class="col-sm-3">
+			<?= $this->formRow($form->get('Csrf'))?>
+			<?= $this->formlabel($form->get('captcha'))?>
+			<?= $this->formelement($form->get('captcha'))?>
+			<?= $this->formelementerrors($form->get('captcha'))?>
+			</div>			
+		</div>
+		<div class="form-group">
+			<div class="col-sm-2">
+				<?= $this->formsubmit($form->get('submit'))?>
+			</div>			
+		</div>
+	</div>
+</div>

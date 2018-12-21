@@ -1,0 +1,19 @@
+<?php
+$form=isset($this->form)?$this->form:null;
+?>
+<?php if(!empty($form)) :?>
+<?php
+    $form->prepare();
+    echo $this->formlabel($form->get('captcha'));
+    echo $this->formRow($form->get('Csrf'));
+    echo $this->formcaptcha($form->get('captcha'));
+?>
+<script type="text/javascript">
+$(function($){
+	$('#captcha input[type=text]').focus(function(){
+		$('.container .alert').remove();
+	});
+});
+</script>
+<?php endif;?>
+

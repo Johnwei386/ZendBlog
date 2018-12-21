@@ -1,0 +1,103 @@
+<?php     
+    $config = new \Zend\Config\Reader\Xml();
+    $allconfig = $config->fromFile(CONFIG_PATH.DS.'config.xml');
+    $class = $allconfig['category'];
+    $title = '';
+    foreach($class as $k => $v){
+        if($k === $this->category){
+            $title = $v;
+            break;
+        }
+    }
+    $this->headtitle($title);
+    $motto = $this->motto;
+?>
+<style>
+
+</style>
+<div class="row content">
+    <div class="col-sm-3 sideleft">
+        <div class="img">
+            <img class="img-circle" src="<?= '/images/uploads/'.$allconfig['headimg']?>" alt="it's me" height="140" width="140"/>
+        </div>
+        <div class="text-center text-muted blogname">
+            <h4 class="text-info">天启崇祯的博客</h4>
+            <p><?= $motto['motto']?><br/>---<?= $motto['author']?></p>
+        </div>
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search Blog..">
+            <span class="input-group-btn">
+                <button class="btn btn-default" type="button">
+                    <span class="glyphicon glyphicon-search"></span>
+                </button>
+            </span>
+        </div>
+    </div>
+
+    <div class="col-sm-9 sideright">
+    	<nav class="crumbs" role="navigation">
+        	<ol>
+        		<li class="crumb">
+        			<a href="<?= $this->url('home')?>">首页</a>
+        		</li>
+        		<li class="crumb">
+        			<a class="noarrow" href="<?= $this->escapehtml('/classlist/'.$this->category)?>"><?= $title?></a>
+        		</li>
+        	</ol>
+        </nav>  		       
+        
+        <div class="row">
+        <?php foreach($this->posts as $blog):?>
+        <div class="list-blg col-sm-12">
+            <div class="col-left">
+                <a href="<?= $this->escapehtml('/viewblog/'.$blog->id)?>"><img class=".img-responsive" src="<?= $blog->image?>" width="100" height="100" alt=""/></a>
+            </div>
+            <div class="col-right">
+                <h2><a href="<?= $this->escapehtml('/viewblog/'.$blog->id)?>"><?= $blog->title?></a></h2>
+                <h5><span class="glyphicon glyphicon-time"></span> Post at <?= $blog->ctime?></h5>
+                <h5><span class="label label-default"><?= $blog->classify?></span></h5>
+            </div>
+        </div>
+        <?php endforeach;?>
+        </div>
+
+        <div class="comment-form">
+            <hr>
+            <h4>评论:</h4>
+            <form role="form" id="myform">
+                <div class="form-group">
+                    <textarea class="form-control" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-default">提交</button>
+            </form>
+        </div>
+
+        <?php
+            // add at the end of the file after the table
+            echo $this->paginationControl(
+                // the paginator object
+                $this->posts,
+                // the scrolling style
+                'sliding',
+                // the partial to use to render the control
+                'partial/paginator.phtml',
+                // the route to link to when a user clicks a control link
+                array(
+                    'route' => 'classlist',
+                    'category' => $this->category,
+                )
+            );
+        ?>
+    </div>
+</div>
+ <script type="text/javascript">
+	$(document).ready(function(){
+	    //左右同高
+	    /* var hei=$('.sideright').height();
+        $('.sideleft').height(hei); */
+		//阻止提交表单行为
+		$('#myform').submit(function(e){
+		    e.preventDefault();
+		});
+	});
+</script>

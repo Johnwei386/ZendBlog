@@ -1,0 +1,159 @@
+<?php
+$title = '编辑内容';
+$this->headtitle($title);
+
+$this->headScript()->prependFile($this->basepath('js/ckeditor/ckeditor.js'));
+?>
+<style>
+.slide {
+	padding-top: 1px !important;
+	padding-right: 2px;
+}
+</style>
+<div class="page-header text-info">
+	<h1><?php echo $this->escapeHtml($title); ?></h1>
+</div>
+<?php 
+    $form = $this->form;
+    $form->setAttribute('ation',$this->url('blog',array('action' => 'edit','id' => $this->id)));
+    $form->prepare();
+    echo $this->form()->openTag($form);
+?>
+<div class="form-group">
+  		<?= $this->formhidden($form->get('id'))?>
+  		<?= $this->formlabel($form->get('title'));?>
+  	<div class="col-sm-10">
+  		<?= $this->formElement($form->get('title'));?>
+		<?= $this->formElementErrors($form->get('title'));?>
+  	</div>		
+</div>
+<div class="form-group">
+  		<?= $this->formlabel($form->get('classify'));?>
+  	<div class="col-sm-3">
+  		<?= $this->formElement($form->get('classify'));?>
+		<?= $this->formElementErrors($form->get('classify'));?>
+  	</div>	
+  		<?= $this->formlabel($form->get('ctime'));?>
+  	<div class="col-sm-3">
+  		<?= $this->formElement($form->get('ctime'));?>
+		<?= $this->formElementErrors($form->get('ctime'));?>
+  	</div>	
+  	<div class="col-sm-3">
+  		<?= $this->formlabel($form->get('slide'));?> 	
+  		<?= $this->formElement($form->get('slide'));?>
+		<?= $this->formElementErrors($form->get('slide'));?>
+  	</div>
+  	<?= $this->formhidden($form->get('image'))?>
+</div>
+<div class="form-group">
+  		<?= $this->formlabel($form->get('content'));?>	
+</div>
+<div class="form-group">
+	<div class="col-sm-11">
+  		<?= $this->formElement($form->get('content'));?>
+		<?= $this->formElementErrors($form->get('content'));?>
+  	</div>	
+</div>
+<div class="form-group">
+  	<div class="col-sm-3">
+  		<?= $this->formElement($form->get('captcha'));?>
+		<?= $this->formElementErrors($form->get('captcha'));?>
+  	</div>		
+</div>
+<div class="form-group">
+  	<div class="col-sm-2">
+  		<?= $this->formSubmit($form->get('send'));?>
+  	</div>		
+</div>
+<?= $this->form()->closeTag();?>
+
+<input type='hidden' id='transVal' value=''/>
+<script type="text/javascript">
+CKEDITOR.replace( 'myedit',{
+    on: {
+        instanceReady: function( ev ) {
+            // Output paragraphs as <p>Text</p>.
+            var array = ['p','div'];
+            for(var i=0;i<array.length;i++){
+            		this.dataProcessor.writer.setRules( array[i], {
+                    	indent: true, //是否缩进
+                    	breakBeforeOpen: false, //开始标记前换行
+                    	breakAfterOpen: true,
+                    	breakBeforeClose: true,
+                    	breakAfterClose: true //结束标记后换行
+                	});
+               }
+          }
+     }
+ });
+
+$(function($){
+	
+	function addUploadButton(){
+	    CKEDITOR.on('dialogDefinition', function( ev ){
+	        var dialogName = ev.data.name;
+	        var dialogDefinition = ev.data.definition;
+	        if ( dialogName == 'image' ){
+	            var infoTab = dialogDefinition.getContents( 'info' );
+	            infoTab.add({
+	                type : 'button',
+	                id : 'upload_image',
+	                align : 'center',
+	                style: 'margin-top:12px;',
+	                label : '上传',
+	                onClick : function( evt ){
+	                    var thisDialog = this.getDialog();
+	                    var txtUrlObj = thisDialog.getContentElement('info', 'txtUrl');
+	                    var txtUrlId = txtUrlObj.getInputElement().$.id;
+	                    addUploadImage(txtUrlId);
+	                	}
+	            }, 'browse');
+	          }
+	    });
+	}
+	 
+	function addUploadImage(theURLElementId){
+	    var uploadUrl = "/upload"; //处理文件/图片上传的页面URL
+	    document.getElementById('transVal').value = theURLElementId;
+	    window.open(uploadUrl, null, 'z-look=yes,hotkeys=yes,width=1000,height=560,left=200,top=60');
+	}
+		
+	addUploadButton();	
+});		
+</script>
+
+<?php 
+/**********************************************************************************************************
+ * 页面地址：http://bbs.csdn.net/topics/330076588
+ *       ：http://www.iteye.com/topic/749437  解决事件分发兼容性问题
+    说明：CKEditor的扩展基本上都是通过on方法实现的。on方法有2个参数，第一个是CKEditor内部的各种事件名
+  称，类似一个钩子。第二个参数是要扩展的代码，通常是一个js函数。因为我们要改动的是image对话框，所以对应的
+  事件名称是dialogDefinition，对话框的名字是image。
+   image url文本框在info选项卡内，通过getContents('info')定位到该选项卡，然后通过infoTab.add()方
+  法就可以在选项卡内添加新的元素了。元素定义是JSON格式。我们这里定义了一个button，其中包括标签(label)和点
+  击(onClick)以后要执行的动作（通常也是个js函数）。infoTab.add()第二个参数是用来指定新元素的位置－在该元
+  素之前。如果不提供这个参数则新元素放在选项卡最后。我们在这里将这个新的Upload按钮放在CKEditor默认的browser
+  按钮前面。
+    upload按钮点击后就是进行upload动作。这个是通过addUploadImage()完成的。该函数接受一个id参数，用来指定
+  upload完成后图片的url返回给哪个表单元素。通过查看源代码可知图片URL文本框的id是txtUrl，但该id是CKEditor自
+  己内部的id,不是页面上最终生成的HTML的id。不过CKEditor也提供了方法getContentElement()和getInputElement()
+  进行2者的转换。addUploadImage函数内容也很简单，先指定我自己的文件上传页面的URL，然后在一个模态窗口中打开这个页面，
+  处理文件上传的所有细节。最终的结果是将图片上传后在服务器上的URL地址返回给一个变量imgUrl。最后把这个变量赋值给传进来
+  的图片URL文本框里。最后手工触发一下onchange事件，这样在image对话框里就能看到图片的预览效果了。
+  infoTab.add({
+	                type : 'button',
+	                id : 'fresh',
+	                align : 'center',
+	                label : '刷新',
+	                onClick : function() {
+	                	var thisDialog = this.getDialog();
+	                   var txtUrlObj = thisDialog.getContentElement('info', 'txtUrl');
+	                   var txtUrlId = txtUrlObj.getInputElement().$.id;
+	                   var urlObj = document.getElementById(txtUrlId);
+		           	   var evt = document.createEvent('HTMLEvents'); 
+		           	   evt.initEvent('change',true,true); 
+		           	   urlObj.dispatchEvent(evt); 
+					   }
+	            }, 'browse');
+ */
+?>

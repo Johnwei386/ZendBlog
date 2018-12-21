@@ -1,0 +1,29 @@
+<?php 
+ $this->headLink()->prependStylesheet($this->basePath('css/acelaya.css'));
+ $this->headLink()->prependStylesheet($this->basePath('css/bootstrap-3.3.1.css'));
+ 
+ $this->headtitle("图片上传");
+ $this->form->setAttribute('action', $this->url('upload'));
+ $this->form->prepare();
+?>
+<style>
+.navbar-brand {
+	padding: 6px 15px;
+}
+</style>
+<fieldset>
+<?php echo $this->form()->openTag($this->form); ?>
+	<div class="form-group">
+		<?php $fileElement = $this->form->get('files'); ?>
+		<?php echo $this->formLabel($fileElement); ?>
+		<div class="col-sm-10">
+			<?php echo $this->formFile($fileElement); ?>
+			<?php echo $this->formElementErrors($fileElement); ?>
+		</div>
+		<div class="col-sm-2">
+			<input type="submit" class="btn btn-primary form-control" value="上传"/>
+		</div>		
+	</div>
+<?php echo $this->form()->closeTag(); ?>
+</fieldset>
+<script src="<?php echo $this->basePath('js/acelaya.js')?>"></script>

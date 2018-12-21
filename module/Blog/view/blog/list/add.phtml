@@ -1,0 +1,123 @@
+<?php
+$title = '添加博客';
+$this->headTitle($title);
+
+$this->headScript()->prependFile($this->basepath('js/ckeditor/ckeditor.js'));
+?>
+<style>
+.slide {
+	padding-top: 1px !important;
+	padding-right: 2px;
+}
+</style>
+<div class="page-header text-info">
+	<h1><?php echo $this->escapeHtml($title); ?></h1>
+</div>
+<?php 
+    $form = $this->form;
+    $form->setAttribute('action', $this->url('blog', array('action' => 'add')));
+    $form->prepare();
+    echo $this->form()->openTag($form);
+?>
+<div class="form-group">
+  		<?= $this->formhidden($form->get('id'))?>
+  		<?= $this->formlabel($form->get('title'));?>
+  	<div class="col-sm-10">
+  		<?= $this->formElement($form->get('title'));?>
+		<?= $this->formElementErrors($form->get('title'));?>
+  	</div>		
+</div>
+<div class="form-group">
+  		<?= $this->formlabel($form->get('classify'));?>
+  	<div class="col-sm-3">
+  		<?= $this->formElement($form->get('classify'));?>
+		<?= $this->formElementErrors($form->get('classify'));?>
+  	</div>	
+  		<?= $this->formlabel($form->get('ctime'));?>
+  	<div class="col-sm-3">
+  		<?= $this->formElement($form->get('ctime'));?>
+		<?= $this->formElementErrors($form->get('ctime'));?>
+  	</div>	
+  	<div class="col-sm-3">
+  		<?= $this->formlabel($form->get('slide'));?> 	
+  		<?= $this->formElement($form->get('slide'));?>
+		<?= $this->formElementErrors($form->get('slide'));?>
+  	</div>
+  	<?= $this->formhidden($form->get('image'))?>
+</div>
+<div class="form-group">
+  		<?= $this->formlabel($form->get('content'));?>	
+</div>
+<div class="form-group">
+	<div class="col-sm-11">
+  		<?= $this->formElement($form->get('content'));?>
+		<?= $this->formElementErrors($form->get('content'));?>
+  	</div>	
+</div>
+<div class="form-group">
+  	<div class="col-sm-3">
+  		<?= $this->formElement($form->get('captcha'));?>
+		<?= $this->formElementErrors($form->get('captcha'));?>
+  	</div>		
+</div>
+<div class="form-group">
+  	<div class="col-sm-2">
+  		<?= $this->formSubmit($form->get('send'));?>
+  	</div>		
+</div>
+<?= $this->form()->closeTag();?>
+
+<input type='hidden' id='transVal' value=''/>
+<script type="text/javascript">
+CKEDITOR.replace( 'myedit',{
+    on: {
+        instanceReady: function( ev ) {
+            // Output paragraphs as <p>Text</p>.
+            var array = ['p','div'];
+            for(var i=0;i<array.length;i++){
+            		this.dataProcessor.writer.setRules( array[i], {
+                    	indent: true, //是否缩进
+                    	breakBeforeOpen: false, //开始标记前换行
+                    	breakAfterOpen: true,
+                    	breakBeforeClose: true,
+                    	breakAfterClose: true //结束标记后换行
+                	});
+               }
+          }
+     }
+ });
+
+$(function($){
+	
+	function addUploadButton(){
+	    CKEDITOR.on('dialogDefinition', function( ev ){
+	        var dialogName = ev.data.name;
+	        var dialogDefinition = ev.data.definition;
+	        if ( dialogName == 'image' ){
+	            var infoTab = dialogDefinition.getContents( 'info' );
+	            infoTab.add({
+	                type : 'button',
+	                id : 'upload_image',
+	                align : 'center',
+	                style: 'margin-top:12px;',
+	                label : '上传',
+	                onClick : function( evt ){
+	                    var thisDialog = this.getDialog();
+	                    var txtUrlObj = thisDialog.getContentElement('info', 'txtUrl');
+	                    var txtUrlId = txtUrlObj.getInputElement().$.id;
+	                    addUploadImage(txtUrlId);
+	                	}
+	            }, 'browse');
+	          }
+	    });
+	}
+	 
+	function addUploadImage(theURLElementId){
+	    var uploadUrl = "/upload"; //处理文件/图片上传的页面URL
+	    document.getElementById('transVal').value = theURLElementId;
+	    window.open(uploadUrl, null, 'z-look=yes,hotkeys=yes,width=1000,height=560,left=200,top=60');
+	}
+		
+	addUploadButton();	
+});		
+</script>

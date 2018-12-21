@@ -1,0 +1,68 @@
+<?php
+$flashMessage = $this->flashMessenger()->getMessages();
+$title = "重置密码";
+$this->headtitle($title);
+$status = isset($this->status)?$this->status:false;
+$message = isset($this->message)?$this->message:'';
+?>
+<?php if($status) : ?>
+	<div class="well">
+		<?php
+			  if(is_array($message)){
+			      foreach ($message as $key=>$val){
+			        echo '@'.$val."<br/>";
+			      }
+			  } else{
+			        echo '@'.$message;
+			  }
+	    ?>
+	</div>
+<?php endif; ?>
+<?php if(!$status) :?>
+<h2><?= $this->escapehtml('重置密码');?></h2>
+
+<?php if (count($flashMessage)) : ?>
+<div class="alert alert-warning">
+	<ul>
+       <?php foreach ($flashMessage as $msg) : ?>
+           <?php foreach ($msg as $type => $message) : ?>
+            	 		<li><span class="<?php echo $type; ?>"><?php echo $message; ?></span></li>
+        	  <?php endforeach; ?>
+    	<?php endforeach; ?>
+    </ul>
+</div>
+<?php endif; ?>
+<?php 
+    $form = $this->form;
+    $form->prepare();
+    echo $this->form()->openTag($form);
+?>
+	<div class="form-group">
+       <?= $this->formlabel($form->get('password'));?>
+       <div class="col-sm-3">
+				<?= $this->formElement($form->get('password'));?>
+				<?= $this->formElementErrors($form->get('password'));?>
+       </div>
+	</div>
+	<div class="form-group">
+       <?= $this->formlabel($form->get('new_pass'));?>
+       <div class="col-sm-3">
+				<?= $this->formElement($form->get('new_pass'));?>
+				<?= $this->formElementErrors($form->get('new_pass'));?>
+       </div>
+	</div>
+	<div class="form-group">
+        <?= $this->formlabel($form->get('captcha'));?>
+        <div class="col-sm-3">
+				<?= $this->formRow($form->get('loginCsrf'));?>
+             <?= $this->formcaptcha($form->get('captcha'));?>
+             <?= $this->formElementErrors($form->get('captcha'));?>
+        </div>
+	</div>
+	<div class="form-group">
+       <div class="col-sm-1">
+				<?= $this->formSubmit($form->get('submit'));?>
+       </div>
+	</div>
+<?= $this->form()->closeTag($form);?>
+<?php endif;?>

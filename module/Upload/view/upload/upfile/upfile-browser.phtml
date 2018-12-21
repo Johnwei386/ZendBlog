@@ -1,0 +1,195 @@
+<?php
+ $this->headtitle('上传图片管理');
+ $basepath = "/images/uploads";
+ $this->headscript()->prependFile($this->basePath('js/jquery.form.js'));
+ ?>
+<style>
+.modal-header, h4, .close {
+   background-color: #333;
+   color: #fff !important;
+   text-align: center;
+   font-size: 30px;
+}
+.modal-header, .modal-body {
+   padding: 20px 50px;
+}
+.btn {
+   background-color: #333;
+   color: #f1f1f1;
+   border-radius: 0;
+   transition: .2s;
+	text-shadow: none;
+}
+.btn:hover, .btn:focus {
+   border: 1px solid #333;
+   background-color: #fff;
+   color: #000;
+}
+</style>
+<h1 class="text-muted"><?= $this->escapehtml('上传图片管理')?></h1>
+<table class="table">
+	<thead>
+ 	<tr>
+ 		<th>Img</th>
+  		<th>文件名</th>
+  		<th>创建时间</th>
+  		<th>文件大小</th>
+  		<th>文件操作</th>
+ 	</tr>
+ 	</thead>
+ 	<tbody>
+	<?php foreach ($this->files as $key => $val) : ?>
+	<?php $id = substr($key, 0, strpos($key, '.'))?>
+ 	<tr>
+  		<td>
+  			<a href="<?= $this->escapehtml($this->basepath($basepath.'/'.$key));?>">
+  				<img class="img-responsive" src="<?= $this->escapehtml($this->basepath($basepath.'/'.$key))?>" width="100" height="100"/>  			
+  			</a> 
+  		</td>
+  		<td>
+  			<a id="<?= $id;?>" href="<?= $this->escapehtml($this->basepath($basepath.'/'.$key));?>">
+  				<?= $key?>
+  			</a>
+  		</td>
+  		<td><?= $this->escapehtml($val['createTime'])?></td>
+  		<td><?= $this->escapehtml(round($val['fileSize']/1024,1)."KB");?></td>
+  		<td>
+  			<button class="btn btn-default btn-sm" onclick="redefname('<?= $id?>','<?= $key?>')">重命名</button>
+  			<button class="btn btn-default btn-sm" onclick="delfile('<?= $key?>')">删除</button>
+  		</td>
+ 	</tr>
+	<?php endforeach; ?>
+	</tbody>
+</table>
+
+<h1 class="text-muted"><?= $this->escapehtml('头像管理')?></h1>
+<hr>
+<div class="text-muted text-left">
+	<img class="img-responsive" src="/images/uploads/<?= $this->headname?>" width="100" height="100"/>
+	<p><?= $this->headname?></p>
+</div>
+<button id="but" type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
+	修改名称
+</button>
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+	  	   <!-- Modal content-->
+	  	   	<div class="modal-content">
+	  	   		 <div class="modal-header text-center">
+	  	   		     <button type="button" class="close" data-dismiss="modal">&times;</button>
+	  	   		     <h4 class="modal-title">修改头像名称</h4>
+	  	   		 </div>
+	  	   		 <div class="modal-body">
+	  	   		    <form method="post" id="myform" action="<?= $this->escapehtml('/modhead')?>" role="form">
+	  	   		    		<div class="form-group">
+	  	   		    			<label for="author">头像名称:</label>
+	  	   		    			<input type="text" name="headimg" class="form-control" value=""/>
+	  	   		    		</div>
+	  	   		    		<button type="submit" class="btn btn-block">提交
+                         <span class="glyphicon glyphicon-ok"></span>
+                      </button>
+	  	   		    	</form> 	   		    	
+	  	   		 </div>
+	  	   		 <div class="modal-footer">
+	  	   		    	<button type="button" class="btn btn-default" data-dismiss="modal">
+                     	<span class="glyphicon glyphicon-remove"></span> Cancel
+                 	</button>
+	  	   		</div>	  	   		    
+	  	   	</div>
+	  </div>
+</div>
+
+<script type="text/javascript">
+	function redefname(id,filename){
+		var newname;
+		$('#'+id).replaceWith("<input class='form-control' type='text' id='"+id+"' value='"+filename+"'/>");
+		$('#'+id).focus();
+		$('#'+id).blur(function(){ 
+			newname = this.value;
+			if(newname == filename){
+				$('#'+id).replaceWith("<a id='"+id+"' href='/images/uploads/"+filename+"'>"+filename+"</a>");
+				return false;
+			}
+			$.post("/upfiles/rename?id="+Math.floor(Math.random()*1000), 
+				    { "filename":filename,"newname":newname},
+					function(data){
+					    if(!data.status){
+						   switch(data.errorcode){
+						     case 1:
+						     		alert(data.message);
+						     		break;
+						     case 2:
+						     		alert(data.message);
+						     		break;
+						     case 3:
+						     		alert(data.message);
+						     		break;
+						     case 4:
+						     		alert(data.message);
+						     		break;
+						     default:
+						     		break;
+						   }
+						   $('#'+id).focus();
+						}else{
+							location.reload();
+						}
+					}, "json");
+		});
+	}
+
+	function delfile(filename){
+		if(confirm('你要确定还是取消')){
+	        var del = 'yes';
+	        $.post("/upfiles/delfile?id="+Math.floor(Math.random()*1000), 
+				    { "filename":filename,"confirm":del},
+					function(data){
+					    if(data.status){
+						   alert(data.message);
+						   location.reload();
+						}else{
+							alert(data.message);
+						}
+					}, "json");
+	    }
+    }
+
+    $(document).ready(function(){
+       $('#but').click(function(){
+    	   $('.container .alert').remove();
+         });
+       
+    	$('#myform').on('submit',function(e){
+ 		   e.preventDefault();
+ 		   $('.container .alert').remove();//移除提示div
+ 		   $(this).ajaxSubmit({
+ 				success: function(response, statusText, xhr, $form){
+ 					if(response.status){
+ 						//Do something
+ 						$('#myform').after(
+ 			                    '<div class="alert alert-success alert-dismissable" style="margin-top: 10px">' +
+ 		                        '<button type="button" class="close" data-dismiss="alert">'+ 
+ 		                        '<span style="color:#333;top:-6px;">&times;</span></button>' +
+ 		                        '<div>' + "<span class='glyphicon glyphicon-ok'></span>" + response.message + '</div>' +
+ 		                        '</div>'
+ 		                );
+ 						location.reload();										
+ 					} else{
+ 						//Do something
+ 						$('#myform').after(
+ 			                    '<div class="alert alert-danger alert-dismissable" style="margin-top: 10px">' +
+ 		                        '<button type="button" class="close" data-dismiss="alert"><span style="color:#333;">&times;</span></button>' +
+ 		                        '<div>' + response.message + '</div>' +
+ 		                        '</div>'
+ 		                );				
+ 					}
+ 				},
+ 				error: function(a,b,c){
+ 					console.log(a,b,c);
+ 				},
+ 				resetForm:true
+ 			});
+ 		});
+     });
+</script>
